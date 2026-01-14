@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.vkrandroid.databinding.FragmentViewerBinding
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class ViewerFragment : Fragment() {
     private var _binding: FragmentViewerBinding? = null
@@ -23,6 +25,11 @@ class ViewerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             findNavController().popBackStack(R.id.galleryFragment,false)
         }

@@ -42,6 +42,7 @@ dependencies {
     implementation (libs.androidx.core.ktx.v1150)
     implementation (libs.androidx.appcompat.v170)
     implementation (libs.material)
+
     implementation(libs.androidx.constraintlayout.v220)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

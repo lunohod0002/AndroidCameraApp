@@ -36,12 +36,12 @@ class CameraFragment : Fragment() {
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var preview : Preview
     private var imageCapture: ImageCapture? = null
-    private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
-
+    private lateinit var recorder : Recorder
+    private lateinit var videoCapture : VideoCapture
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
     private var isVideoMode = false
@@ -80,7 +80,9 @@ class CameraFragment : Fragment() {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-
+        preview = Preview.Builder().build().also { it.setSurfaceProvider(binding.viewFinder.surfaceProvider) }
+        recorder = Recorder.Builder().setQualitySelector(QualitySelector.from(Quality.HIGHEST)).build()
+        videoCapture = VideoCapture.withOutput(recorder)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         setupListeners()
@@ -105,6 +107,7 @@ class CameraFragment : Fragment() {
         binding.switchCameraBtn.setOnClickListener {
             cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
                 CameraSelector.DEFAULT_FRONT_CAMERA else CameraSelector.DEFAULT_BACK_CAMERA
+
             startCamera()
         }
 
@@ -164,17 +167,12 @@ class CameraFragment : Fragment() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-            }
+
 
             val useCases = mutableListOf<UseCase>(preview)
 
             if (isVideoMode) {
-                val recorder = Recorder.Builder()
-                    .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
-                    .build()
-                videoCapture = VideoCapture.withOutput(recorder)
+
                 useCases.add(videoCapture!!)
             } else {
                 imageCapture = ImageCapture.Builder().build()
@@ -183,7 +181,8 @@ class CameraFragment : Fragment() {
 
             try {
                 cameraProvider.unbindAll()
-                camera = cameraProvider.bindToLifecycle(this, cameraSelector, *useCases.toTypedArray())
+                camera = cameraProvider.
+                bindToLifecycle(this, cameraSelector, *useCases.toTypedArray())
             } catch (e: Exception) {
                 Log.e("CameraFragment", "Binding failed", e)
             }
@@ -246,6 +245,7 @@ class CameraFragment : Fragment() {
 
         recording = videoCapture.output
             .prepareRecording(requireContext(), mediaStoreOutput)
+            .asPersistentRecording()
             .apply {
                 if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                     withAudioEnabled()
