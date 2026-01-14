@@ -41,7 +41,7 @@ class CameraFragment : Fragment() {
     private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var recorder : Recorder
-    private lateinit var videoCapture : VideoCapture
+    private var videoCapture = VideoCapture.withOutput(recorder)
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
     private var isVideoMode = false
@@ -82,7 +82,6 @@ class CameraFragment : Fragment() {
         }
         preview = Preview.Builder().build().also { it.setSurfaceProvider(binding.viewFinder.surfaceProvider) }
         recorder = Recorder.Builder().setQualitySelector(QualitySelector.from(Quality.HIGHEST)).build()
-        videoCapture = VideoCapture.withOutput(recorder)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         setupListeners()
