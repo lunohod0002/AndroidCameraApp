@@ -166,24 +166,19 @@ class CameraFragment : Fragment() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-
-
             val useCases = mutableListOf<UseCase>(preview)
-
             if (isVideoMode) {
-
                 useCases.add(videoCapture!!)
             } else {
                 imageCapture = ImageCapture.Builder().build()
                 useCases.add(imageCapture!!)
             }
-
             try {
                 cameraProvider.unbindAll()
                 camera = cameraProvider.
                 bindToLifecycle(this, cameraSelector, *useCases.toTypedArray())
             } catch (e: Exception) {
-                Log.e("CameraFragment", "Binding failed", e)
+               //
             }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
@@ -227,7 +222,6 @@ class CameraFragment : Fragment() {
             recording = null
             return
         }
-
         val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -241,7 +235,6 @@ class CameraFragment : Fragment() {
             requireContext().contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
             .setContentValues(contentValues)
             .build()
-
         recording = videoCapture.output
             .prepareRecording(requireContext(), mediaStoreOutput)
             .asPersistentRecording()
