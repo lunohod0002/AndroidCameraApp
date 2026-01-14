@@ -7,14 +7,13 @@
     android:layout_margin="2dp"
     app:cardCornerRadius="4dp">
 
-    <!-- Картинка -->
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <!-- Иконка Play -->
+
     <ImageView
         android:id="@+id/playIcon"
         android:layout_width="30dp"

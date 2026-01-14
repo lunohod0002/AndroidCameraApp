@@ -5,7 +5,7 @@
             <stroke
                 android:width="4dp"
                 android:color="#FFFFFF" />
-            <solid android:color="#897E7E" /> <!-- Прозрачный центр -->
+            <solid android:color="#897E7E" />
             <size
                 android:width="70dp"
                 android:height="70dp" />
