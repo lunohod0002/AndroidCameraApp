@@ -47,7 +47,6 @@
             android:layout_height="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_gallery"
-            android:contentDescription="Gallery"
             app:tint="@android:color/white" />
 
         <com.google.android.material.button.MaterialButton
@@ -65,7 +64,6 @@
             android:layout_height="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_switch_camera"
-            android:contentDescription="Switch Camera"
             app:tint="@android:color/white" />
     </LinearLayout>
 
